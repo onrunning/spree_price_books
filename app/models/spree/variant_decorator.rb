@@ -25,19 +25,31 @@ Spree::Variant.class_eval do
   end
 
   def list_price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
-    if store_id
-      prices.list.by_currency(currency).by_store(store_id).by_role(role_ids).first
-    else
-      prices.list.by_currency(currency).by_role(role_ids).first
-    end
+    currency_price = prices.list.by_currency(currency)
+    role_price = currency_price.by_role(role_ids)
+    role_price.first
   end
 
   def price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
-    if store_id
-      prices.by_currency(currency).by_store(store_id).by_role(role_ids).first
-    else
-      prices.by_currency(currency).by_role(role_ids).first
-    end
+    currency_price = prices.by_currency(currency)
+    role_price = currency_price.by_role(role_ids)
+    role_price.first
   end
+
+  # def _list_price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
+  #   if store_id
+  #     prices.list.by_currency(currency).by_store(store_id).by_role(role_ids).first
+  #   else
+  #     prices.list.by_currency(currency).by_role(role_ids).first
+  #   end
+  # end
+
+  # def _price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
+  #   if store_id
+  #     prices.by_currency(currency).by_store(store_id).by_role(role_ids).first
+  #   else
+  #     prices.by_currency(currency).by_role(role_ids).first
+  #   end
+  # end
 
 end
