@@ -37,7 +37,9 @@ Spree::Price.class_eval do
       if price = book.prices.find_by_variant_id(self.variant_id)
         price.update_attribute :amount, self.amount * book.price_adjustment_factor
       else
-        book.prices.create amount: (self.amount * book.price_adjustment_factor), currency: book.currency, variant_id: self.variant_id
+        puts self.amount || 0.00
+        puts book.price_adjustment_factor
+        book.prices.create amount: ((self.amount || 0.00) * book.price_adjustment_factor), currency: book.currency, variant_id: self.variant_id
       end
     end
   end
