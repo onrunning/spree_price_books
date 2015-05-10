@@ -6,6 +6,10 @@
   <% @current_price_book = Spree::PriceBook.find session[:current_price_book_id] %>
 <% end %>
 
+<% if @parent_price_book.nil? %>
+  <% @parent_price_book = @current_price_book.parent %>
+<% end %>
+
 <%= form_tag :admin_update_variants_prices, method: :put %>
   <div class="field">
     <%= label :price_book_id, Spree::PriceBook.model_name.human(:count => 2) %>
@@ -14,7 +18,8 @@
 
   <table class="index">
     <colgroup>
-      <col style="width: 55%" />
+      <col style="width: 40%" />
+      <col style="width: 15%" />
       <col style="width: 15%" />
       <col style="width: 15%" />
       <col style="width: 15%" />
@@ -22,7 +27,8 @@
     <thead data-hook="variants_header">
       <tr>
         <th><%= Spree.t(:variant) %></th>
-        <th><%= Spree.t(:default_price) %></th>
+        <th><%= Spree.t(:master_price) %></th>
+        <th><%= Spree.t(:parent_price) %></th>
         <th><%= Spree.t(:factored_price) %></th>
         <th><%= "#{Spree.t(:price)} (#{@current_price_book.currency})" %></th>
       </tr>
@@ -32,6 +38,13 @@
       <tr id="<%= spree_dom_id variant %>" <%= 'style="color:red;"' if variant.deleted? %> data-hook="variants_row" class="<%= cycle('odd', 'even')%>">
         <td><%= variant.is_master? ? 'Master' : variant.options_text %></td>
         <td class="align-center"><%= Spree::Money.new(variant.default_price.amount, currency: variant.default_price.currency) %></td>
+        <td class="align-center">
+          <% if @parent_price_book %>
+            <%= Spree::Money.new(@parent_prices[variant.id].try(:amount), currency: @parent_prices[variant.id].try(:currency)) %>
+          <% else %>
+            —
+          <% end %>
+        </td>
         <td class="align-center">
           <% if @current_price_book.factored? %>
             <%= Spree::Money.new(@prices[variant.id].try(:amount), currency: @prices[variant.id].try(:currency)) %>

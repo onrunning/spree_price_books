@@ -6,6 +6,7 @@ module Spree
         session.delete(:current_price_book_id)
 
         @current_price_book = id.present? ? PriceBook.find(id) : PriceBook.default
+        @parent_price_book = @current_price_book.parent
 
         # need every variant/price(for the current price book) pair
         # I had to do this ridiculous sort to get the master first since the scope orders by position,
@@ -13,9 +14,15 @@ module Spree
         @variants = @product.variants_including_master.partition {|v| v.is_master?}.flatten
 
         @prices = {}
+        @parent_prices = {}
 
         @variants.each do |variant|
-          @prices[variant.id] = variant.prices.detect {|price| price.price_book_id == @current_price_book.id} # possibly nil
+          @prices[variant.id] = variant.prices.detect {|price| price.price_book_id == @current_price_book.id}
+
+          if @parent_price_book
+            @parent_prices[variant.id] = variant.prices.detect {|price| price.price_book_id == @parent_price_book.id}
+          end
+           # possibly nil
         end
 
         @price_books    = PriceBook.order('name')
