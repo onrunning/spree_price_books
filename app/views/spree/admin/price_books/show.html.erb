@@ -48,7 +48,5 @@
 <br />
 
 <h4><%= Spree.t(:products) %></h4><br />
-<% if @price_book.explicit? %>
-  <%= render partial: 'added_products' %>
-  <div class="pagination_links_bottom"><%= paginate @products %></div>
-<% end %>
+<%= render partial: 'added_products' %>
+<div class="pagination_links_bottom"><%= paginate @products %></div>
