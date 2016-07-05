@@ -57,7 +57,7 @@
       <%= f.field_container :parent do %>
         <%= f.label :parent, Spree.t(:parent) %> <span class="required">*</span><br />
         <%= f.collection_select(:parent_id, Spree::PriceBook.all - [f.object], :id, :name,
-              include_blank: true, selected: Spree::PriceBook.default.id, class: 'fullwidth select2') %>
+              include_blank: true, class: 'fullwidth select2') %>
         <%= f.error_message_on :parent %>
       <% end %>
     </div>
