@@ -18,19 +18,19 @@ Spree::Variant.class_eval do
 
   ## Instance Methods
 
-  def display_list_price(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
+  def display_list_price(currency = Spree::Config[:currency], store_id = nil, role_ids = nil)
     lp = list_price_in(currency, store_id)
     raise RuntimeError, "No available price for Variant #{id} with #{currency} currency in store #{store_id}." unless lp
     Spree::Money.new lp.amount, currency: lp.currency
   end
 
-  def list_price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
+  def list_price_in(currency = Spree::Config[:currency], store_id = nil, role_ids = nil)
     currency_price = prices.list.by_currency(currency)
     role_price = currency_price.by_role(role_ids)
     role_price.first
   end
 
-  def price_in(currency = Spree::Config[:currency], store_id = Spree::Store.default.id, role_ids = nil)
+  def price_in(currency = Spree::Config[:currency], store_id = nil, role_ids = nil)
     currency_price = prices.by_currency(currency)
     role_price = currency_price.by_role(role_ids)
     role_price.first
